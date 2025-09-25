@@ -40,7 +40,7 @@ public class Main {
 			try {
 			System.out.println("Elige una opcion: 1-Añadir Alumno. 2-Mostrar Alumnos ordenados. 3-Salir.");
 			opcion=prompt.nextInt();
-			
+			prompt.nextLine();
 			switch(opcion) {
 			case 1:
 				
@@ -72,6 +72,8 @@ public class Main {
 		System.out.println(
 				"como quieres ordenar los alumnos: 1-Nia. 2-Ciclo. 3-Curso. 4-Grupo. 5-Nombre. 6-Apellidos. 7-Fecha. 8-Genero.");
 			opcion=prompt.nextInt();
+			
+			prompt.nextLine();
 		switch (opcion) {
 		case 1:
 			System.out.println("Mostrar alumnos ordenados por Nia:");
@@ -127,7 +129,7 @@ public class Main {
 			break;
 		case 7:
 			System.out.println("Mostrar alumnos ordenados por Fecha:");
-			alumnos.sort(Comparator.comparing(Alumno::getGenero));
+			alumnos.sort(Comparator.comparing(Alumno::getFecha));
 
 			for (Alumno alumno : alumnos) {
 				System.out.println(alumno.toString() + "\n");
@@ -152,7 +154,7 @@ public class Main {
 	public static void anadirAlumno(List<Alumno> alumnos) throws  java.util.InputMismatchException {
 		System.out.println("Introduce el Nia:");
 		int nia = prompt.nextInt();
-
+		prompt.nextLine();
 		System.out.println("Introduce el nombre:");
 		String nombre = prompt.nextLine();
 
@@ -161,7 +163,7 @@ public class Main {
 
 		System.out.println("Introduce el genero:1-M 2-F");
 		char genero = (prompt.nextInt() == 1) ? 'M' : 'F';
-
+		prompt.nextLine();
 		System.out.println("Introduce el curso:");
 		String curso = prompt.nextLine();
 
@@ -174,7 +176,7 @@ public class Main {
 		System.out.println("Introduce la fecha (formato-> xx/xx/xxxx):");
 		String fecha = prompt.nextLine();
 
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/mm/yyyy");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
 		alumnos.add(new Alumno(nia, nombre, apellidos, ciclo, curso, grupo, genero, LocalDate.parse(fecha, formatter)));
 		System.out.println("Alumno añadido correctamente.");
