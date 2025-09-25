@@ -1,6 +1,7 @@
 package acceso_a_datos;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 //Tendria que 
 public class Alumno {
 	private int nia;
@@ -8,6 +9,7 @@ public class Alumno {
 	private char genero;
 	private LocalDate fecha;
 	
+	static DateTimeFormatter formatoFech=DateTimeFormatter.ofPattern("dd/MM/yyyy"); 
 	static int acumulador=1;
 	
 	public Alumno() {
@@ -24,8 +26,9 @@ public class Alumno {
 	
 	@Override
 	public String toString() {
+		String fechaFormat=fecha.format(this.formatoFech);
 		return "Alumno [nia=" + nia + ", nombre=" + nombre + ", apellidos=" + apellidos + ", ciclo=" + ciclo
-				+ ", curso=" + curso + ", grupo=" + grupo + ", genero=" + genero + ", fecha=" + fecha + "]";
+				+ ", curso=" + curso + ", grupo=" + grupo + ", genero=" + genero + ", fecha=" + fechaFormat + "]";
 	}
 
 	public Alumno(int nia, String nombre, String apellidos, String ciclo, String curso, String grupo, char genero,

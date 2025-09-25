@@ -28,16 +28,16 @@ public class Main {
 		for (Alumno alumno : alumnos) {
 			System.out.println(alumno.toString() + "\n");
 		}
-		
 		menu(alumnos);
-
+		
 	}
 
-	public static void menu(List<Alumno> alumnos) {
+	public static void menu(List<Alumno> alumnos) throws java.util.InputMismatchException{
 		
 		int opcion=0;
 		
 		do {
+			try {
 			System.out.println("Elige una opcion: 1-Añadir Alumno. 2-Mostrar Alumnos ordenados. 3-Salir.");
 			opcion=prompt.nextInt();
 			
@@ -54,13 +54,20 @@ public class Main {
 			case 3:
 				System.out.println("fin del programa");
 				break;
+			default:
+				System.out.println("Fuera de rango.");
 			
+			}
+			}catch(java.util.InputMismatchException e) {
+				System.out.println("error no introducido dato numerico");
+				opcion=0;
+				prompt.nextLine();
 			}
 				
 		}while(opcion!=3);
 	}
 
-	public static void mostrarAlumnos(List<Alumno> alumnos) {
+	public static void mostrarAlumnos(List<Alumno> alumnos) throws  java.util.InputMismatchException {
 		int opcion = 0;
 		System.out.println(
 				"como quieres ordenar los alumnos: 1-Nia. 2-Ciclo. 3-Curso. 4-Grupo. 5-Nombre. 6-Apellidos. 7-Fecha. 8-Genero.");
@@ -142,7 +149,7 @@ public class Main {
 
 	}
 
-	public static void anadirAlumno(List<Alumno> alumnos) {
+	public static void anadirAlumno(List<Alumno> alumnos) throws  java.util.InputMismatchException {
 		System.out.println("Introduce el Nia:");
 		int nia = prompt.nextInt();
 
