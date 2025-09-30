@@ -1,9 +1,13 @@
 package Tarea4;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-public class Alumno {
+public class Alumno implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+	
 	private int nia;
 	private String nombre,apellidos,ciclo,curso,grupo;
 	private char genero;
