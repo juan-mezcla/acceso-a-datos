@@ -19,9 +19,9 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		try {
-			
+
 			menu();
-		}finally {
+		} finally {
 			prompt.close();
 		}
 	}
@@ -41,8 +41,8 @@ public class Main {
 			case 2:
 				seleccionarArchivo();
 				break;
-				
-			case 3: 
+
+			case 3:
 				System.out.println("FIN");
 				break;
 			default:
@@ -56,8 +56,9 @@ public class Main {
 	public static void menuFichero(File arch) {
 		int opcion = 0;
 		do {
-			
-			System.out.println("Elige lo que quieres hacer con el fichero: 1-Añadir alumno. 2-Mostrar alumnos. 3-Salir al menu de inicio.");
+
+			System.out.println(
+					"Elige lo que quieres hacer con el fichero: 1-Añadir alumno. 2-Mostrar alumnos. 3-Salir al menu de inicio.");
 			opcion = prompt.nextInt();
 			prompt.nextLine();
 			switch (opcion) {
@@ -71,7 +72,7 @@ public class Main {
 			case 3:
 				menu();
 				break;
-			
+
 			}
 
 		} while (opcion != 3);
@@ -83,20 +84,19 @@ public class Main {
 		boolean exists = false;
 		do {
 			try {
-				
+
 				exists = false;
 
 				System.out.println("Indica la ruta y el nombre del nuevo archivo con su extension:");
 				String ruta = prompt.nextLine();
 				arch = new File(ruta);
-				
 
 				if (!arch.exists()) {
-					
+
 					arch.createNewFile();
 					archivos.add(ruta);
 					menuFichero(arch);
-					
+
 				} else {
 					System.out.println("Ya existe un archivo con ese nombre");
 					exists = true;
@@ -118,52 +118,52 @@ public class Main {
 			cont++;
 
 		}
-		
+
 		System.out.println("Elige un archivo:");
 		int opcion = prompt.nextInt();
-		
-		if (opcion < archivos.size()-1  || opcion >= 0) {
+
+		if (opcion < archivos.size() - 1 || opcion >= 0) {
 
 			menuFichero(new File(archivos.get(opcion - 1)));
 
-		}else {
+		} else {
 			System.out.println("fuera de rango");
 		}
-		
 
 	}
 
 	public static void anadirAlumno(File arch) {
-		try(FileOutputStream escribirArch=new FileOutputStream(arch,true)) {	
+		try (FileOutputStream escribirArch = new FileOutputStream(arch, true)) {
 			
-			ObjectOutputStream alumno=new ObjectOutputStream(escribirArch);
-			
+			ObjectOutputStream alumno = (arch.length()>0)?new MiObjectOutput(escribirArch):new ObjectOutputStream(escribirArch);
+
 			alumno.writeObject(new Alumno());
 			
-			escribirArch.close();
+			escribirArch.flush();;
 			alumno.close();
+
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		}
 	}
 
 	public static void MostrarAlumnos(File arch) {
-		
-		try (FileInputStream leer=new FileInputStream(arch)){
-		ObjectInputStream leerObj=new ObjectInputStream(leer);	
-		
-		System.out.println("Alumnos dentro del archivo leido:");
-		while(leer.available()>0) {
-			Alumno alumno=(Alumno) leerObj.readObject();
-			System.out.println(alumno.toString());
-		}
-		
-		leer.close();
-		leerObj.close();
+
+		try (FileInputStream leer = new FileInputStream(arch)) {
+			ObjectInputStream leerObj = new ObjectInputStream(leer);
+
+			System.out.println("Alumnos dentro del archivo leido:");
+			while (leer.available() > 0) {
+				Alumno alumno = (Alumno) leerObj.readObject();
+				System.out.println(alumno.toString());
+			}
+
+			leer.close();
+			leerObj.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -2,7 +2,7 @@ package acceso_a_datos;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-//Tendria que 
+
 public class Alumno {
 	private int nia;
 	private String nombre,apellidos,ciclo,curso,grupo;
@@ -24,12 +24,6 @@ public class Alumno {
 		acumulador++;
 	}
 	
-	@Override
-	public String toString() {
-		String fechaFormat=fecha.format(this.formatoFech);
-		return "Alumno [nia=" + nia + ", nombre=" + nombre + ", apellidos=" + apellidos + ", ciclo=" + ciclo
-				+ ", curso=" + curso + ", grupo=" + grupo + ", genero=" + genero + ", fecha=" + fechaFormat + "]";
-	}
 
 	public Alumno(int nia, String nombre, String apellidos, String ciclo, String curso, String grupo, char genero,
 			LocalDate fecha) {
@@ -42,6 +36,13 @@ public class Alumno {
 		this.grupo = grupo;
 		this.genero = genero;
 		this.fecha = fecha;
+	}
+	
+	@Override
+	public String toString() {
+		String fechaFormat=fecha.format(this.formatoFech);
+		return "Alumno [nia=" + nia + ", nombre=" + nombre + ", apellidos=" + apellidos + ", ciclo=" + ciclo
+				+ ", curso=" + curso + ", grupo=" + grupo + ", genero=" + genero + ", fecha=" + fechaFormat + "]";
 	}
 	
 	public int getNia() {

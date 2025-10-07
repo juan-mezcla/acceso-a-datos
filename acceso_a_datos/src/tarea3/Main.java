@@ -53,12 +53,12 @@ public class Main {
 				linea1=reader1.readLine();
 				linea2=reader2.readLine();
 				
-				System.out.println("Vuelta "+vueltas+"\nLinea de archivo 2: "+linea1+"\n");
+				//System.out.println("Vuelta "+vueltas+"\nLinea de archivo 2: "+linea1+"\n");
 				if(linea1!=null) {
 				escrituraArchivo.write(linea1+"\n");
 				}
 				
-				System.out.println("\nLinea de archivo 3: "+linea2+"\n");
+				//System.out.println("\nLinea de archivo 3: "+linea2+"\n");
 				if(linea2!=null) {
 				escrituraArchivo.write(linea2+"\n");
 				}
@@ -75,6 +75,8 @@ public class Main {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally {
+			System.out.println("Find el programa");
 		}
 		
 		/*

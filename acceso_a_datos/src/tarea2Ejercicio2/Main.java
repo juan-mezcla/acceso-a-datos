@@ -29,7 +29,7 @@ public class Main {
 			textoCompleto+="\n"+texto;
 			}
 			
-			System.out.println("prompt:"+texto+" es igual que exit? "+(texto.toLowerCase().trim()!="exit"));
+			//System.out.println("prompt:"+texto+" es igual que exit? "+(texto.toLowerCase().trim()!="exit"));
 		}while(!texto.equalsIgnoreCase("exit"));
 	
 		

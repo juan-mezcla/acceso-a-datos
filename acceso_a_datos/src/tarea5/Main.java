@@ -14,18 +14,22 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Scanner prompt = new Scanner(System.in);
+		
 		System.out.println("Nombre del archivo binario:");
 		String nombreArch = prompt.nextLine();
+		
 		System.out.println("Ruta del archivo:");
 		String rutaArch = prompt.nextLine() + nombreArch + ".txt";
 
 		try {
 			FileOutputStream escrituraArch = new FileOutputStream(new File(rutaArch), true);
 			ObjectOutputStream writeObj = new ObjectOutputStream(escrituraArch);
+			
 			for (int i = 0; i < 5; i++) {
 				Alumno alumno = new Alumno();
 				writeObj.writeObject(alumno);
 			}
+			
 			System.out.println("Alumnos añadidos.");
 			writeObj.close();
 			escrituraArch.flush();
