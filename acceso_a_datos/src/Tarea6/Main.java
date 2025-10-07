@@ -1,9 +1,11 @@
 package Tarea6;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +18,12 @@ public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		try {
+			
+			menu();
+		}finally {
+			prompt.close();
+		}
 	}
 
 	public static void menu() {
@@ -25,7 +32,7 @@ public class Main {
 			System.out.println(
 					"Elige la opcion que quieres realizar: 1-Generar fichero nuevo. 2-Selecionar un fichero. 3-Salir");
 			opcion = prompt.nextInt();
-
+			prompt.nextLine();
 			switch (opcion) {
 			case 1:
 				crearArchivo();
@@ -34,7 +41,12 @@ public class Main {
 			case 2:
 				seleccionarArchivo();
 				break;
+				
+			case 3: 
+				System.out.println("FIN");
+				break;
 			default:
+				System.out.println("Fuera de rango.");
 				break;
 			}
 
@@ -44,9 +56,10 @@ public class Main {
 	public static void menuFichero(File arch) {
 		int opcion = 0;
 		do {
-			System.out.println("Elige lo que quieres hacer con el fichero: 1-Añadir alumno. 2-Mostrar alumnos. 3-Salir");
+			
+			System.out.println("Elige lo que quieres hacer con el fichero: 1-Añadir alumno. 2-Mostrar alumnos. 3-Salir al menu de inicio.");
 			opcion = prompt.nextInt();
-
+			prompt.nextLine();
 			switch (opcion) {
 			case 1:
 				anadirAlumno(arch);
@@ -54,6 +67,9 @@ public class Main {
 
 			case 2:
 				MostrarAlumnos(arch);
+				break;
+			case 3:
+				menu();
 				break;
 			
 			}
@@ -67,17 +83,20 @@ public class Main {
 		boolean exists = false;
 		do {
 			try {
+				
 				exists = false;
 
 				System.out.println("Indica la ruta y el nombre del nuevo archivo con su extension:");
 				String ruta = prompt.nextLine();
-
 				arch = new File(ruta);
+				
 
 				if (!arch.exists()) {
+					
 					arch.createNewFile();
-					menuFichero(arch);
 					archivos.add(ruta);
+					menuFichero(arch);
+					
 				} else {
 					System.out.println("Ya existe un archivo con ese nombre");
 					exists = true;
@@ -95,28 +114,66 @@ public class Main {
 		System.out.println("Archivos con contenido de alumnos:");
 		for (String arch : archivos) {
 
-			System.out.println(cont + "-" + arch);
+			System.out.println(cont + "-" + arch.toString());
 			cont++;
 
 		}
-
+		
 		System.out.println("Elige un archivo:");
 		int opcion = prompt.nextInt();
-		if (opcion < archivos.size() - 1 || opcion >= 0) {
+		
+		if (opcion < archivos.size()-1  || opcion >= 0) {
 
 			menuFichero(new File(archivos.get(opcion - 1)));
 
 		}else {
 			System.out.println("fuera de rango");
 		}
+		
+
 	}
 
 	public static void anadirAlumno(File arch) {
-
+		try(FileOutputStream escribirArch=new FileOutputStream(arch,true)) {	
+			
+			ObjectOutputStream alumno=new ObjectOutputStream(escribirArch);
+			
+			alumno.writeObject(new Alumno());
+			
+			escribirArch.close();
+			alumno.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 	}
 
 	public static void MostrarAlumnos(File arch) {
-
+		
+		try (FileInputStream leer=new FileInputStream(arch)){
+		ObjectInputStream leerObj=new ObjectInputStream(leer);	
+		
+		System.out.println("Alumnos dentro del archivo leido:");
+		while(leer.available()>0) {
+			Alumno alumno=(Alumno) leerObj.readObject();
+			System.out.println(alumno.toString());
+		}
+		
+		leer.close();
+		leerObj.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
