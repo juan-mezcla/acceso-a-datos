@@ -72,6 +72,9 @@ public class Main {
 			case 3:
 				menu();
 				break;
+			default:
+				System.out.println("Fuera de rango.");
+				break;
 
 			}
 
