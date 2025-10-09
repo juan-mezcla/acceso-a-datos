@@ -1,4 +1,4 @@
-package Tarea6;
+package tarea6;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

@@ -1,4 +1,4 @@
-package Tarea4;
+package tarea4;
 
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -1,4 +1,4 @@
-package Tarea6;
+package tarea6;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -90,7 +90,7 @@ public class Main {
 				break;
 
 			case 2:
-				MostrarAlumnos(arch);
+				mostrarAlumnos(arch);
 				break;
 			case 3:
 				System.out.println("salida de fichero");
@@ -128,7 +128,7 @@ public class Main {
 
 	public static File seleccionarArchivo(int opcion) {
 		File arch=null;
-		if (opcion < archivos.size() - 1 || opcion >= 0) {
+		if (opcion < archivos.size() - 1 && opcion >= 0) {
 			arch=new File(archivos.get(opcion - 1));
 		} else {
 			System.out.println("fuera de rango");
@@ -159,7 +159,7 @@ public class Main {
 		return error;
 	}
 
-	public static boolean MostrarAlumnos(File arch) {
+	public static boolean mostrarAlumnos(File arch) {
 		boolean error=false;
 		try (FileInputStream leer = new FileInputStream(arch)) {
 			ObjectInputStream leerObj = new ObjectInputStream(leer);

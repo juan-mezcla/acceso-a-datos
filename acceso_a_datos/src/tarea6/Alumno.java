@@ -1,4 +1,4 @@
-package Tarea6;
+package tarea6;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
