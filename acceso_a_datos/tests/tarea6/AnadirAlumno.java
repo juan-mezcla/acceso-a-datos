@@ -11,11 +11,12 @@ import tarea6.Main;
 
 class AnadirAlumno {
 
-
+	static final String ARCHIVO_TEST = "alumnos_test.dat";
 	@Test
 	void test() {
-		File arch=Main.crearArchivo("hello.txt");
+		File arch=new File(ARCHIVO_TEST);
 		
+		assertTrue(Main.anadirAlumno(arch));
 		assertTrue(Main.anadirAlumno(arch));
 	}
 

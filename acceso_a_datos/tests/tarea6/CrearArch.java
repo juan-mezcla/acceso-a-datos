@@ -14,7 +14,7 @@ class CrearArch {
 
 	@Test
 	void test() {
-		File arch=Main.crearArchivo("hola.txt");
+		File arch=Main.crearArchivo("archivo_Tests.dat");
 		
 		assertTrue(arch.exists());
 	}

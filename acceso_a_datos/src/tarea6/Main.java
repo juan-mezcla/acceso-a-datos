@@ -1,12 +1,16 @@
 package tarea6;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,12 +19,33 @@ public class Main {
 
 	static Scanner prompt = new Scanner(System.in);
 	static List<String> archivos = new ArrayList<>();
-
+	static File listaArchivosUsados=new File("archivosUsados.txt");
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		try {
-
+			if(!listaArchivosUsados.exists()) {
+				listaArchivosUsados.createNewFile();
+			}
+			
+			
+			FileInputStream leerArch=new FileInputStream(listaArchivosUsados);
+			BufferedReader leerArchivosUsados=new BufferedReader(new InputStreamReader(leerArch));
+			
+			String nombresArchivos;
+			
+			while((nombresArchivos=leerArchivosUsados.readLine())!=null) {
+				if(!archivos.contains(nombresArchivos)) {
+					
+					archivos.add(nombresArchivos);
+				}
+			}
+			leerArchivosUsados.close();
+			leerArch.close();
+			
 			menu();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} finally {
 			prompt.close();
 		}
@@ -41,29 +66,49 @@ public class Main {
 				do {
 					System.out.println("Indica la ruta y el nombre del nuevo archivo con su extension:");
 					String ruta = prompt.nextLine();
-					
 					arch=crearArchivo(ruta);
 				}while(!arch.exists());
 				menuFichero(arch);
 				break;
 
 			case 2:
-				int cont = 1;
-				System.out.println("Archivos con contenido de alumnos:");
-				for (String nomArch : archivos) {
-
-					System.out.println(cont + "-" + nomArch.toString());
-					cont++;
-
-				}
-
-				System.out.println("Elige un archivo:");
-				arch=seleccionarArchivo(prompt.nextInt());
-				prompt.nextLine();
-				
-				if(arch.exists()) {					
-					menuFichero(arch);
-				}
+				System.out.println(archivos.size());
+				if(archivos.size()>0) {
+					
+					int cont = 1;
+					System.out.println("Archivos con contenido de alumnos:");
+					try {
+						if(!listaArchivosUsados.exists()) {
+							listaArchivosUsados.createNewFile();
+						}
+						FileInputStream leerListaArchivos=new FileInputStream(listaArchivosUsados);
+						BufferedReader leerArchivosUsados=new BufferedReader(new InputStreamReader(leerListaArchivos));
+						
+						String nombresArchivos;
+						
+						while((nombresArchivos=leerArchivosUsados.readLine())!=null) {
+							System.out.println(cont + "-" + nombresArchivos);
+							cont++;
+						}
+						leerArchivosUsados.close();
+						leerListaArchivos.close();
+						
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					System.out.println("Elige un archivo:");
+					arch=seleccionarArchivo(prompt.nextInt());
+					prompt.nextLine();
+					
+					if(arch.exists()) {					
+						menuFichero(arch);
+					}
+				}else {System.out.println("No se han creado archivos aun con contenido de alumnos.");}
 				break;
 
 			case 3:
@@ -108,13 +153,41 @@ public class Main {
 			File arch=null;
 		
 			try {
+				if(!listaArchivosUsados.exists()) {
+					listaArchivosUsados.createNewFile();
+				}
+				
+				if(archivos.size()<0) {
+					archivos.add(ruta);
+				}
+				
+				FileInputStream leerArch=new FileInputStream(listaArchivosUsados);
+				BufferedReader leerArchivosUsados=new BufferedReader(new InputStreamReader(leerArch));
+				
+				String nombresArchivos;
+				
+				while((nombresArchivos=leerArchivosUsados.readLine())!=null) {
+					if(!archivos.contains(nombresArchivos)) {
+						
+						archivos.add(ruta);
+					}
+				}
+				leerArchivosUsados.close();
+				leerArch.close();
 				arch = new File(ruta);
 
 				if (!arch.exists()) {
-
+					FileOutputStream escribirArch=new FileOutputStream(listaArchivosUsados,true);
+					
+					PrintWriter escribir=new PrintWriter (escribirArch);
+					escribir.write(ruta.trim()+"\n");
+					
+					escribir.close();
+					escribirArch.close();
+					
 					arch.createNewFile();
-					archivos.add(ruta);
-
+					
+					
 				} else {
 					System.out.println("Ya existe un archivo con ese nombre");
 				}
@@ -128,8 +201,11 @@ public class Main {
 
 	public static File seleccionarArchivo(int opcion) {
 		File arch=null;
-		if (opcion < archivos.size() - 1 && opcion >= 0) {
+		
+		if (opcion<= archivos.size() && opcion >= 0) {
+			
 			arch=new File(archivos.get(opcion - 1));
+			
 		} else {
 			System.out.println("fuera de rango");
 		}
