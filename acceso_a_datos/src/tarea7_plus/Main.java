@@ -27,45 +27,8 @@ public class Main {
 			alumnos[i]=new Alumno();
 		}
 		try{
-			DocumentBuilder builder=instancia.newDocumentBuilder();
-			DOMImplementation domXml=builder.getDOMImplementation();
+			ArchivoXml xml=new ArchivoXml("alumnos","alumnos","1.0");
 			
-			Document doc=domXml.createDocument(null,"alumnos", null);
-			doc.setXmlVersion("1.0");
-			
-			for(int i=0; i<alumnos.length-1; i++) {
-				Alumno alumno=alumnos[i];
-				
-				Element etiquetaAlumno=doc.createElement("alumno");
-				doc.getDocumentElement().appendChild(etiquetaAlumno);
-				
-				crearElemento("nia",Integer.toString(alumno.getNia()),doc,etiquetaAlumno);
-				crearElemento("nombre",alumno.getNombre(),doc,etiquetaAlumno);
-				crearElemento("apellidos",alumno.getApellidos(),doc,etiquetaAlumno);
-				crearElemento("genero",String.valueOf(alumno.getGenero()) ,doc,etiquetaAlumno);
-				crearElemento("fechaNacimiento",alumno.getFechaString(),doc,etiquetaAlumno);
-				crearElemento("ciclo",alumno.getCiclo(),doc,etiquetaAlumno);
-				crearElemento("curso",alumno.getCurso(),doc,etiquetaAlumno);
-				crearElemento("grupo",alumno.getGrupo(),doc,etiquetaAlumno);
-			}
-			
-			Source recurso=new DOMSource(doc);
-			Result result=new StreamResult(new java.io.File("Alumnos.xml"));
-			Transformer creacionXml=TransformerFactory.newInstance().newTransformer();
-			creacionXml.transform(recurso, result);
-			
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerFactoryConfigurationError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}finally {
 			
 		}
