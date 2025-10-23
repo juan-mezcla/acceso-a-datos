@@ -32,8 +32,8 @@ public class ArchivoXml {
 
 	/**
 	 * @param nombreXml    nombre del documento que se creara.
-	 * @param elementoRaiz la etiqueta principal dentro del XMl. *@param version la
-	 *                     de nuestro XMl.
+	 * @param elementoRaiz la etiqueta principal dentro del XMl. 
+	 * @param version la de nuestro XMl.
 	 */
 	public ArchivoXml(String nombreXml, String elementoRaiz, String version) {
 
@@ -56,7 +56,7 @@ public class ArchivoXml {
 		}
 	}
 
-	public void anadirEtiqueta(String nomEtiqueta, String texto, List<Atributo> atributos) {
+	public void anadirEtiqueta(Element padre,String nomEtiqueta, String texto, List<Atributo> atributos) {
 		Element etiqueta = this.getDoc().createElement(nomEtiqueta);
 		etiqueta.setTextContent(texto);// Ejemplo: <etiqueta>texto</etiqueta>
 
@@ -65,7 +65,7 @@ public class ArchivoXml {
 				etiqueta.setAttribute(atributo.getNombre(), atributo.getValor());
 			}
 		}
-		this.getDoc().appendChild(etiqueta);
+		padre.appendChild(etiqueta);
 
 	}
 
@@ -150,10 +150,10 @@ public class ArchivoXml {
 		this.domXml = domXml;
 	}
 
-	private Document getDoc() {
+	public Document getDoc() {
 		return doc;
 	}
-
+ 
 	private void setDoc(Document doc) {
 		this.doc = doc;
 	}
