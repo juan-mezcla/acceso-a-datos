@@ -29,22 +29,10 @@ public class Main {
 		
 		for(int i=0; i<5; i++) {
 			alumnos[i]=new Alumno();
-			Alumno alumno=alumnos[i];
-			/*
-			 
-			atributos.add(new Atributo("nia",Integer.toString(alumno.getNia())));
-			atributos.add(new Atributo("nombre",alumno.getNombre()));
-			atributos.add(new Atributo("apellidos",alumno.getApellidos()));
-			atributos.add(new Atributo("genero",String.valueOf(alumno.getGenero())));
-			atributos.add(new Atributo("fechaNacimiento",alumno.getFechaString()));
-			atributos.add(new Atributo("ciclo",alumno.getCiclo()));
-			atributos.add(new Atributo("curso",alumno.getCurso()));
-			atributos.add(new Atributo("grupo",alumno.getGrupo()));
-			 * */
-			
+			Alumno alumno=alumnos[i];	
 			
 		}
-		try{
+		
 			ArchivoXml xml=new ArchivoXml("alumnosEtiqueta","alumnos","1.0");
 			Document doc=xml.getDoc();
 			
@@ -64,15 +52,9 @@ public class Main {
 			}
 			
 			xml.crearXml();
-		}finally {
-			
-		}
+		
 	}
 	
-	private static void crearElemento(String nomEtiqueta,String dato, Document doc, Element padre){
-		Element etiqueta=doc.createElement(nomEtiqueta);
-		etiqueta.setTextContent(dato);
-		padre.appendChild(etiqueta);
-	}
+	
 
 }

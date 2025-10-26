@@ -32,7 +32,7 @@ public class MainAtributos {
 			alumnos[i]=new Alumno();
 			Alumno alumno=alumnos[i];		
 		}
-		try{
+		
 			ArchivoXml xml=new ArchivoXml("alumnosAtributos","alumnos","1.0");
 			Document doc=xml.getDoc();
 			
@@ -53,15 +53,9 @@ public class MainAtributos {
 			}
 			
 			xml.crearXml();
-		}finally {
-			
-		}
+		
 	}
 	
-	private static void crearElemento(String nomEtiqueta,String dato, Document doc, Element padre){
-		Element etiqueta=doc.createElement(nomEtiqueta);
-		etiqueta.setTextContent(dato);
-		padre.appendChild(etiqueta);
-	}
+	
 
 }

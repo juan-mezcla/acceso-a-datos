@@ -58,12 +58,13 @@ public class ArchivoXml {
 
 	public void anadirEtiqueta(Element padre,String nomEtiqueta, String texto, List<Atributo> atributos) {
 		Element etiqueta = this.getDoc().createElement(nomEtiqueta);
-		etiqueta.setTextContent(texto);// Ejemplo: <etiqueta>texto</etiqueta>
 
-		if (atributos != null) {// Ejemplo: <etiqueta atributo="valor" ...>texto</etiqueta>
+		if (atributos != null) {// Ejemplo: <etiqueta atributo="valor" ...></etiqueta>
 			for (Atributo atributo : atributos) {
 				etiqueta.setAttribute(atributo.getNombre(), atributo.getValor());
 			}
+		}else {
+			etiqueta.setTextContent(texto);// Ejemplo: <etiqueta>texto</etiqueta>
 		}
 		padre.appendChild(etiqueta);
 
