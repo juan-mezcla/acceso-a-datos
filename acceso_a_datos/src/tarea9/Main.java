@@ -50,7 +50,7 @@ public class Main {
 			
 			ArchivoXml xml=new ArchivoXml("Subtitulos","subtitulos","1.0");
 			Document doc=xml.getDoc();
-			Element etiquetaAlumno=null;
+			
 			
 			boolean siguienteSubtitulo=true;
 			
@@ -58,37 +58,37 @@ public class Main {
 			
 			for(String subtitulo:subtitulos) {
 				
-				System.out.println(subtitulo+"\n");
-				
 				if(subtitulo.matches("\\d+") && !siguienteSubtitulo) {//añadimos los datos de atributo y linea dentro de la etiqueta.
-					
-					xml.anadirAtributo(etiquetaAlumno, linea, texto, atributos);
-					
-				}else {//Creamos la etiqueta si es la primera vez.
-					etiquetaAlumno=doc.createElement("subtitulo");
-					doc.getDocumentElement().appendChild(etiquetaAlumno);					
+					System.out.println("Añadidos los atributos a la etiqueta.");
+					xml.anadirAtributo(doc.getDocumentElement(), "subtitulo", texto, atributos);
+					siguienteSubtitulo=true;
 				}
 				
+				  
 				if(subtitulo.matches("\\d+")) {//comprobamos que sea el numero de la columna.
+					System.out.println("Creacion de atributo columna:"+linea+" \n");
 					atributos=new ArrayList<Atributo>();
 					atributos.add(new Atributo("numero", linea));
 					
 					siguienteSubtitulo=false;
 					
 				}else if(subtitulo.contains("-->")) {//comprobamos si es el tiempo de inicio y fin
-					
+					System.out.println("Creacion de atributos de tiempo. \n");
 					String tiempos[]=subtitulo.split("-->");
 					
 					atributos.add(new Atributo("inicio", tiempos[0]));
 					atributos.add(new Atributo("fin", tiempos[1]));
 				
-				}else {//El texto que tendra la etiqueta.
+				}else if(!subtitulo.trim().equals(" ")) {//El texto que tendra la etiqueta.
+					System.out.println("Texto de la etiqueta con contenido:"+subtitulo+" \n");
 					texto+=" "+linea;
 				}
 				
 				
 				
 			}
+			System.out.println("Fin bucle for.");
+			xml.crearXml();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
