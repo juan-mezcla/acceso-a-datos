@@ -48,21 +48,22 @@ public class Main {
 			String linea1="";
 			String linea2="";
 			int vueltas=1;
-			while(linea1!=null || linea2!=null) {
+			while((linea1=reader1.readLine())!=null && (linea2=reader2.readLine())!=null) {//Con readLine si el condicional && no llega al segundo se queda sin leer esa linea
 				
-				linea1=reader1.readLine();
-				linea2=reader2.readLine();
-				
-				//System.out.println("Vuelta "+vueltas+"\nLinea de archivo 2: "+linea1+"\n");
-				if(linea1!=null) {
-				escrituraArchivo.write(linea1+"\n");
-				}
-				
-				//System.out.println("\nLinea de archivo 3: "+linea2+"\n");
-				if(linea2!=null) {
+				escrituraArchivo.write(linea1+"\n");			
 				escrituraArchivo.write(linea2+"\n");
-				}
-				vueltas++;
+				
+			}
+			
+			
+			while(linea1!=null) {//Sera null si ya no contiene nada el fichero
+				escrituraArchivo.write(linea1+"\n");
+				linea1=reader1.readLine();
+			}
+			
+			while((linea2=reader2.readLine())!=null) {//Sera null si ya no contiene nada el fichero, pero comprobamos por si no ha leido en el primer while por que el primer fichero se ha quedado vacio.
+				escrituraArchivo.write(linea2+"\n");
+				linea2=reader2.readLine();
 			}
 			
 			reader1.close();
