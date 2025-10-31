@@ -60,15 +60,16 @@ public class Main {
 				
 				if(subtitulo.matches("\\d+") && !siguienteSubtitulo) {//añadimos los datos de atributo y linea dentro de la etiqueta.
 					System.out.println("Añadidos los atributos a la etiqueta.");
+					System.out.println("Texto: "+texto);
 					xml.anadirAtributo(doc.getDocumentElement(), "subtitulo", texto, atributos);
 					siguienteSubtitulo=true;
 				}
 				
 				  
 				if(subtitulo.matches("\\d+")) {//comprobamos que sea el numero de la columna.
-					System.out.println("Creacion de atributo columna:"+linea+" \n");
+					System.out.println("Creacion de atributo columna:"+subtitulo+" \n");
 					atributos=new ArrayList<Atributo>();
-					atributos.add(new Atributo("numero", linea));
+					atributos.add(new Atributo("numero", subtitulo));
 					
 					siguienteSubtitulo=false;
 					
@@ -76,12 +77,12 @@ public class Main {
 					System.out.println("Creacion de atributos de tiempo. \n");
 					String tiempos[]=subtitulo.split("-->");
 					
-					atributos.add(new Atributo("inicio", tiempos[0]));
-					atributos.add(new Atributo("fin", tiempos[1]));
+					atributos.add(new Atributo("inicio", tiempos[0].trim()));
+					atributos.add(new Atributo("fin", tiempos[1].trim()));
 				
 				}else if(!subtitulo.trim().equals(" ")) {//El texto que tendra la etiqueta.
 					System.out.println("Texto de la etiqueta con contenido:"+subtitulo+" \n");
-					texto+=" "+linea;
+					texto+=" "+subtitulo;
 				}
 				
 				

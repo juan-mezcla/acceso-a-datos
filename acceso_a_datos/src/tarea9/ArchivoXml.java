@@ -73,6 +73,7 @@ public class ArchivoXml {
 
 		if (atributos != null) {// Ejemplo: <etiqueta atributo="valor" ...></etiqueta>
 			for (Atributo atributo : atributos) {
+				etiqueta.setTextContent(texto);
 				etiqueta.setAttribute(atributo.getNombre(), atributo.getValor());
 			}
 		}
