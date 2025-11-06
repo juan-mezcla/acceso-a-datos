@@ -9,10 +9,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Source;
 import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -22,190 +20,108 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class ArchivoXml {
-	private String nombreXml, elementoRaiz;
-	private DocumentBuilderFactory instancia = DocumentBuilderFactory.newInstance();
-	private DocumentBuilder builder;
-	private DOMImplementation domXml;
+    private String nombreXml, elementoRaiz;
+    private DocumentBuilderFactory instancia = DocumentBuilderFactory.newInstance();
+    private DocumentBuilder builder;
+    private DOMImplementation domXml;
+    private Document doc;
+    private Source recurso;
+    private Result result;
+    private Transformer creacionXml;
+    private String XSL = "alumnos.xsl";
+    private File directorioSalida;
 
-	private Document doc;
-	private Source recurso;
-	private Result result;
-	private Transformer creacionXml;
-	
-	private String XSL="alumnos.xsl";
+    /**
+     * Constructor base para crear un archivo XML.
+     *
+     * @param nombreXml    nombre del documento que se creará (puede incluir ruta)
+     * @param elementoRaiz etiqueta principal dentro del XML.
+     * @param version      versión XML (por ejemplo, "1.0").
+     */
+    public ArchivoXml(String nombreXml, String elementoRaiz, String version) {
+        this.nombreXml = nombreXml;
+        this.elementoRaiz = elementoRaiz;
 
+  
+        File posibleRuta = new File(nombreXml);
+        if (posibleRuta.isAbsolute()) {
+            this.directorioSalida = posibleRuta.getParentFile();
+            this.nombreXml = posibleRuta.getName();
+        } else {
+            this.directorioSalida = new File(System.getProperty("user.dir"));
+        }
 
-	/**
-	 * @param nombreXml    nombre del documento que se creara.
-	 * @param elementoRaiz la etiqueta principal dentro del XMl. 
-	 * @param version la de nuestro XMl.
-	 */
-	public ArchivoXml(String nombreXml, String elementoRaiz, String version) {
+        try {
+            this.builder = this.instancia.newDocumentBuilder();
+            this.domXml = this.builder.getDOMImplementation();
+            this.doc = this.domXml.createDocument(null, this.elementoRaiz, null);
+            this.doc.setXmlVersion(version);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        }
+    }
 
-		this.nombreXml = nombreXml;
-		this.elementoRaiz = elementoRaiz;
-		try {
+    
+    public void anadirEtiqueta(Element padre, String nomEtiqueta, String texto) {
+        Element etiqueta = this.doc.createElement(nomEtiqueta);
+        etiqueta.setTextContent(texto);
+        padre.appendChild(etiqueta);
+    }
 
-			this.setBuilder(this.getInstancia().newDocumentBuilder());
+    
+    public void anadirAtributo(Element padre, String nomEtiqueta, String texto, List<Atributo> atributos) {
+        Element etiqueta = this.doc.createElement(nomEtiqueta);
+        etiqueta.setTextContent(texto);
 
-			this.setDomXml(this.getBuilder().getDOMImplementation());
+        if (atributos != null) {
+            for (Atributo atributo : atributos) {
+                etiqueta.setAttribute(atributo.getNombre(), atributo.getValor());
+            }
+        }
+        padre.appendChild(etiqueta);
+    }
 
-			this.setDoc(this.getDomXml().createDocument(null, this.elementoRaiz, null));
+    
+    public void crearXml() {
+        try {
+            
+            File archivoXml = new File(this.directorioSalida, this.nombreXml + ".xml");
+            this.recurso = new DOMSource(this.doc);
+            this.result = new StreamResult(archivoXml);
 
-			this.getDoc().setXmlVersion(version);
+            this.creacionXml = TransformerFactory.newInstance().newTransformer();
+            this.creacionXml.transform(this.recurso, this.result);
 
-		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+            System.out.println("XML creado correctamente en: " + archivoXml.getAbsolutePath());
 
-		}
-	}
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+    }
 
-	public void anadirEtiqueta(Element padre,String nomEtiqueta, String texto) {
-		Element etiqueta = this.getDoc().createElement(nomEtiqueta);
-		etiqueta.setTextContent(texto);// Ejemplo: <etiqueta>texto</etiqueta>
-		padre.appendChild(etiqueta);
+    
+    public void crearXslHtml() {
+        File xmlFile = new File(this.directorioSalida, this.nombreXml + ".xml");
+        File xslFile = new File(this.XSL);
+        File htmlOutput = new File(this.directorioSalida, this.nombreXml + ".html");
 
-	}
-	
-	public void anadirAtributo(Element padre,String nomEtiqueta, String texto, List<Atributo> atributos) {
-		Element etiqueta = this.getDoc().createElement(nomEtiqueta);
-
-		if (atributos != null) {// Ejemplo: <etiqueta atributo="valor" ...></etiqueta>
-			for (Atributo atributo : atributos) {
-				etiqueta.setTextContent(texto);
-				etiqueta.setAttribute(atributo.getNombre(), atributo.getValor());
-			}
-		}
-		padre.appendChild(etiqueta);
-
-	}
-
-	public Transformer getCreacionXml() {
-		return creacionXml;
-	}
-
-	public void setCreacionXml(Transformer creacionXml) {
-		this.creacionXml = creacionXml;
-	}
-
-	public void crearXml() {
-		try {
-			this.setRecurso(new DOMSource(this.getDoc()));
-			this.setResult(new StreamResult(new java.io.File(this.getNombreXml() + ".xml")));
-
-			this.setCreacionXml(TransformerFactory.newInstance().newTransformer());
-			this.getCreacionXml().transform(this.getRecurso(), this.getResult());
-			
-		} catch (TransformerConfigurationException | TransformerFactoryConfigurationError e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public void crearXslHtml() {
-		// Rutas de los archivos
-        File xmlFile = new File(this.getNombreXml()+".xml");
-        File xslFile = new File(this.getXSL());
-        File htmlOutput = new File(this.getNombreXml()+".html");
-
-        // Crear las fuentes de XML y XSL
         Source xmlSource = new StreamSource(xmlFile);
         Source xslSource = new StreamSource(xslFile);
 
-        // Crear el transformador
-        TransformerFactory factory = TransformerFactory.newInstance();
-        Transformer transformer;
-		try {
-			
-			transformer = factory.newTransformer(xslSource);
-			// Aplicar la transformación y generar el HTML
-			transformer.transform(xmlSource, new StreamResult(htmlOutput));
-			
-			
-		} catch (TransformerConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransformerException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+        try {
+            Transformer transformer = TransformerFactory.newInstance().newTransformer(xslSource);
+            transformer.transform(xmlSource, new StreamResult(htmlOutput));
+            System.out.println("HTML generado correctamente en: " + htmlOutput.getAbsolutePath());
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        }
+    }
 
-	}
-
-	private String getXSL() {
-		return XSL;
-	}
-	
-	private void setXSL(String xSL) {
-		XSL = xSL;
-	}
-	public Source getRecurso() {
-		return recurso;
-	}
-
-	public void setRecurso(Source recurso) {
-		this.recurso = recurso;
-	}
-
-	public Result getResult() {
-		return result;
-	}
-
-	public void setResult(Result result) {
-		this.result = result;
-	}
-
-	public void setInstancia(DocumentBuilderFactory instancia) {
-		this.instancia = instancia;
-	}
-
-	private String getNombreXml() {
-		return nombreXml;
-	}
-
-	private void setNombreXml(String nombreXml) {
-		this.nombreXml = nombreXml;
-	}
-
-	private String getElementoRaiz() {
-		return elementoRaiz;
-	}
-
-	private void setElementoRaiz(String elementoRaiz) {
-		this.elementoRaiz = elementoRaiz;
-	}
-
-	private DocumentBuilderFactory getInstancia() {
-		return instancia;
-	}
-
-	private DocumentBuilder getBuilder() {
-		return builder;
-	}
-
-	private void setBuilder(DocumentBuilder builder) {
-		this.builder = builder;
-	}
-
-	private DOMImplementation getDomXml() {
-		return domXml;
-	}
-
-	private void setDomXml(DOMImplementation domXml) {
-		this.domXml = domXml;
-	}
-
-	public Document getDoc() {
-		return doc;
-	}
- 
-	private void setDoc(Document doc) {
-		this.doc = doc;
-	}
-
+    protected Document getDoc() { return doc; }
+    protected String getNombreXml() { return nombreXml; }
+    protected void setResult(Result result) { this.result = result; }
+    protected void setRecurso(Source recurso) { this.recurso = recurso; }
+    protected Source getRecurso() { return recurso; }
+    protected Result getResult() { return result; }
+    protected File getDirectorioSalida() { return directorioSalida; }
 }

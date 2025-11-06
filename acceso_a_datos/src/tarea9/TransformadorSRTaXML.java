@@ -12,119 +12,107 @@ import org.w3c.dom.Document;
 
 public class TransformadorSRTaXML extends ArchivoXml {
 
-	private String srt,texto = "";;
-	private List<Atributo> atributos = null;
-	/**
-	 * @param srt
-	 */
-	public TransformadorSRTaXML(String srt, String nombre, String etiquetaRaiz, String version) {
+    private String srt, texto = "";
+    private List<Atributo> atributos = null;
+    private File archivoSrt;
 
-		super(nombre, etiquetaRaiz, version);
-		this.srt = srt;
+    /**
+     * Constructor que acepta tanto rutas absolutas como relativas.
+     *
+     * @param srt ruta o nombre del archivo .srt
+     * @param nombre nombre base para el xml
+     * @param etiquetaRaiz etiqueta raíz del xml
+     * @param version versión del xml
+     */
+    public TransformadorSRTaXML(String srt, String nombre, String etiquetaRaiz, String version) {
+        super(nombre, etiquetaRaiz, version);
 
-		this.transformador();
-	}
+    
+        File f = new File(srt);
+        if (!f.isAbsolute()) {
+            f = new File(System.getProperty("user.dir"), srt);
+        }
+        this.archivoSrt = f;
+        this.srt = f.getAbsolutePath();
 
-	private void transformador() {
-		File archSrt = new File(this.getSrt());
-		List<Atributo> atributos = null;
+        this.transformador();
+    }
 
-		try (BufferedReader leerArch = new BufferedReader(new FileReader(archSrt));) {
-			String linea;
-			
-			Document doc = this.getDoc();
+    private void transformador() {
+        try (BufferedReader leerArch = new BufferedReader(new FileReader(this.archivoSrt))) {
+            String linea;
+            Document doc = this.getDoc();
+            boolean siguiente = true;
 
-			boolean siguiente = true;
+            while ((linea = leerArch.readLine()) != null) {
 
-			while ((linea = leerArch.readLine()) != null) {
+                if (linea.equals("") && !siguiente) {
+                    // Añadimos el texto y atributos a la etiqueta <subtitulo>
+                    this.anadirAtributo(doc.getDocumentElement(), "subtitulo", this.getTexto(), this.getAtributos());
+                    this.setTexto("");
+                    siguiente = true;
+                }
 
-				if (linea.equals("") && !siguiente) {// añadimos los datos de atributo y linea dentro
-					// de la etiqueta.
-					//System.out.println("Añadidos los atributos a la etiqueta.");
-					//System.out.println("Texto: " + this.getTexto());
+                siguiente = siguienteSubtitulo(linea, siguiente);
+            }
 
-					this.anadirAtributo(doc.getDocumentElement(), "subtitulo", this.getTexto(), this.getAtributos());
-					
-					this.setTexto("");
-					siguiente = true;
-				}
+            System.out.println("Transformación completada para: " + archivoSrt.getName());
 
-				siguiente=siguienteSubtitulo(linea,siguiente);
-			}
-			leerArch.close();
+        } catch (FileNotFoundException e) {
+            System.err.println("Archivo no encontrado: " + archivoSrt.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-			System.out.println("Fin bucle.");
+    private boolean siguienteSubtitulo(String linea, boolean siguienteSubtitulo) {
+        if (linea.matches("\\d+")) {
+            this.setAtributos(new ArrayList<Atributo>());
+            this.getAtributos().add(new Atributo("numero", linea));
+            siguienteSubtitulo = false;
 
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			System.out.println("archivo no encontrado");
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+        } else if (linea.contains("-->")) {
+            String tiempos[] = linea.split("-->");
+            this.getAtributos().add(new Atributo("inicio", tiempos[0].trim()));
+            this.getAtributos().add(new Atributo("fin", tiempos[1].trim()));
 
-	private boolean siguienteSubtitulo(String linea, boolean siguienteSubtitulo) {
-		if (linea.matches("\\d+")) {// comprobamos que sea el numero de la columna.
-			//System.out.println("Creacion de atributo columna:" + linea + " \n");
+        } else if (!linea.equals("")) {
+            this.setTexto(this.getTexto() + " " + linea);
+        }
 
-			this.setAtributos(new ArrayList<Atributo>());
+        return siguienteSubtitulo;
+    }
 
-			this.getAtributos().add(new Atributo("numero", linea));
+    /**
+     * Sobrescribimos el método crearXml() para guardar el XML en la misma carpeta
+     * que el .srt
+     */
+    @Override
+    public void crearXml() {
+        try {
+            // Ruta del XML en el mismo directorio del SRT
+            String rutaXml = new File(archivoSrt.getParent(), this.getNombreXml() + ".xml").getAbsolutePath();
+            this.setResult(new javax.xml.transform.stream.StreamResult(new File(rutaXml)));
+            this.setRecurso(new javax.xml.transform.dom.DOMSource(this.getDoc()));
 
-			siguienteSubtitulo = false;
+            javax.xml.transform.Transformer transformer = javax.xml.transform.TransformerFactory.newInstance().newTransformer();
+            transformer.transform(this.getRecurso(), this.getResult());
 
-		} else if (linea.contains("-->")) {// comprobamos si es el tiempo de inicio y fin
-			//System.out.println("Creacion de atributos de tiempo. \n");
-			String tiempos[] = linea.split("-->");
+            System.out.println("XML creado en: " + rutaXml);
 
-			this.getAtributos().add(new Atributo("inicio", tiempos[0].trim()));
-			this.getAtributos().add(new Atributo("fin", tiempos[1].trim()));
-			
-		} else if (!linea.equals("")) {// El texto que tendra la etiqueta.
-			//System.out.println("Texto de la etiqueta con contenido:" + linea + " \n");
-			this.setTexto(this.getTexto()+" "+linea);
-		}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-		return siguienteSubtitulo;
-	}
+    // --- Getters y Setters ---
+    private String getSrt() { return srt; }
 
-	/**
-	 * @return the srt
-	 */
-	private String getSrt() {
-		return srt;
-	}
+    private List<Atributo> getAtributos() { return atributos; }
 
-	/**
-	 * @return the atributos
-	 */
-	private List<Atributo> getAtributos() {
-		return atributos;
-	}
+    private void setAtributos(List<Atributo> atributos) { this.atributos = atributos; }
 
-	/**
-	 * @param atributos the atributos to set
-	 */
-	private void setAtributos(List<Atributo> atributos) {
-		this.atributos = atributos;
-	}
+    private String getTexto() { return texto; }
 
-	/**
-	 * @return the texto
-	 */
-	private String getTexto() {
-		return texto;
-	}
-
-	/**
-	 * @param texto the texto to set
-	 */
-	private void setTexto(String texto) {
-		this.texto = texto;
-	}
-	
-	
-
+    private void setTexto(String texto) { this.texto = texto; }
 }
