@@ -138,4 +138,26 @@ public class Main {
         	lineaMaxSrt.buscarSrtConLineaMasLarga();
         }
     }
+    
+    private void intervaloSrt() {
+    	System.out.println("Ruta del fichero de subtítulos (.srt): ");
+        String ruta = prompt.nextLine().trim();
+
+        File archivoSrt = new File(ruta);
+        
+        System.out.println("Ruta del fichero donde se mostraran los intervalos: ");
+        String rutaOutput = prompt.nextLine().trim();
+        
+        File outPutFile=new File(rutaOutput);
+
+        if (!archivoSrt.exists() || !archivoSrt.getName().endsWith(".srt")) {
+            System.out.println("El archivo no existe o no tiene extensión .srt");
+        }else if(!outPutFile.exists()){
+        	System.out.println("Archivo no encontrado");
+        	
+        }else {
+        	//Crear el Buscador de linea mas larga.
+        	IntervalosSinSubtítulos intervaloSrt=new IntervalosSinSubtítulos();
+        }
+    }
 }
