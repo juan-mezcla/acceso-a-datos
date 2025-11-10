@@ -20,7 +20,7 @@ public class Main {
 
         do {
             System.out.println("\n--- MENÚ ---");
-            System.out.println("1. Generar XML de un archivo .srt 2. Generar XML de todos los .srt en una carpeta 3. Guardar subtitulos mas largos. 4. Salir");
+            System.out.println("1. Generar XML de un archivo .srt 2. Generar XML de todos los .srt en una carpeta 3. Guardar subtitulos mas largos. 4. Guardar el srt con linea mas larga. 5. Salir");
             System.out.println("Elige una opción: ");
 
             opcion = prompt.nextInt();
@@ -37,13 +37,17 @@ public class Main {
                 	srts_con_subtitulos_largos();
                     break;
                 case 4:
+                	srt_con_subtitulos_MasLargo();
+                case 5:
                     System.out.println("Fin del programa.");
                     break;
+                    
+                
                 default:
                     System.out.println("Opción no válida.");
             }
 
-        } while (opcion != 4);
+        } while (opcion != 5);
     }
 
     private void srtA_XML() {
@@ -116,5 +120,22 @@ public class Main {
 			// TODO: handle exception
 			e.printStackTrace();
 		}
+    }
+    
+    private void srt_con_subtitulos_MasLargo() {
+    	System.out.println("Ruta del fichero de subtítulos (.srt): ");
+        String ruta = prompt.nextLine().trim();
+
+        File archivoSrt = new File(ruta);
+
+        if (!archivoSrt.exists() || !archivoSrt.getName().endsWith(".srt")) {
+            System.out.println("El archivo no existe o no tiene extensión .srt");
+        }else {
+        	
+        	//Crear el Buscador de linea mas larga.
+        	LineaMasLarga lineaMaxSrt=new LineaMasLarga(ruta);
+        	
+        	lineaMaxSrt.buscarSrtConLineaMasLarga();
+        }
     }
 }

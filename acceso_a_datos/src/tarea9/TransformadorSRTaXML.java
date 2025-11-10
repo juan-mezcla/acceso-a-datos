@@ -12,7 +12,7 @@ import org.w3c.dom.Document;
 
 public class TransformadorSRTaXML extends ArchivoXml {
 
-    private String srt, texto = "";
+    private String texto = "";
     private List<Atributo> atributos = null;
     private File archivoSrt;
 
@@ -33,7 +33,6 @@ public class TransformadorSRTaXML extends ArchivoXml {
             f = new File(System.getProperty("user.dir"), srt);
         }
         this.archivoSrt = f;
-        this.srt = f.getAbsolutePath();
 
         this.transformador();
     }
@@ -104,9 +103,6 @@ public class TransformadorSRTaXML extends ArchivoXml {
             e.printStackTrace();
         }
     }
-
-    // --- Getters y Setters ---
-    private String getSrt() { return srt; }
 
     private List<Atributo> getAtributos() { return atributos; }
 
