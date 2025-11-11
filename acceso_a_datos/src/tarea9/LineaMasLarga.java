@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LineaMasLarga {
-	private String ruta,textoMasLargo = "", textoSubtitulo = "";;
+	private String ruta,textoMasLargo = "", textoSubtitulo = "";
 	private File archivoSrt;
 	private static final int LONGITUDMAX = 50;
 	private List<String> subtituloMasLargo = new ArrayList<String>();
@@ -149,13 +149,6 @@ public class LineaMasLarga {
 	}
 
 	/**
-	 * @param subtitulo the subtitulo to set
-	 */
-	private void setSubtitulo(List<String> subtitulo) {
-		this.subtitulo = subtitulo;
-	}
-
-	/**
 	 * @return the ruta
 	 */
 	private String getRuta() {
@@ -163,24 +156,10 @@ public class LineaMasLarga {
 	}
 
 	/**
-	 * @param ruta the ruta to set
-	 */
-	private void setRuta(String ruta) {
-		this.ruta = ruta;
-	}
-
-	/**
 	 * @return the archivoSrt
 	 */
 	private File getArchivoSrt() {
 		return archivoSrt;
-	}
-
-	/**
-	 * @param archivoSrt the archivoSrt to set
-	 */
-	private void setArchivoSrt(File archivoSrt) {
-		this.archivoSrt = archivoSrt;
 	}
 
 }

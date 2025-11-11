@@ -20,7 +20,12 @@ public class Main {
 
         do {
             System.out.println("\n--- MENÚ ---");
-            System.out.println("1. Generar XML de un archivo .srt 2. Generar XML de todos los .srt en una carpeta 3. Guardar subtitulos mas largos. 4. Guardar el srt con linea mas larga. 5. Salir");
+            System.out.println("1. Generar XML de un archivo .srt \n"
+            		+ "2. Generar XML de todos los .srt en una carpeta \n"
+            		+ "3. Guardar subtitulos mas largos. \n"
+            		+ "4. Guardar el srt con linea mas larga. \n"
+            		+ "5. Ver intervalo subtitulos. \n"
+            		+ "6. Salir");
             System.out.println("Elige una opción: ");
 
             opcion = prompt.nextInt();
@@ -39,15 +44,17 @@ public class Main {
                 case 4:
                 	srt_con_subtitulos_MasLargo();
                 case 5:
-                    System.out.println("Fin del programa.");
+                    intervaloSrt();
                     break;
                     
-                
+                case 6:
+                    System.out.println("Fin del programa.");
+                    break;
                 default:
                     System.out.println("Opción no válida.");
             }
 
-        } while (opcion != 5);
+        } while (opcion != 6);
     }
 
     private void srtA_XML() {
@@ -156,8 +163,9 @@ public class Main {
         	System.out.println("Archivo no encontrado");
         	
         }else {
-        	//Crear el Buscador de linea mas larga.
-        	IntervalosSinSubtítulos intervaloSrt=new IntervalosSinSubtítulos();
+        	
+        	IntervalosSinSubtítulos intervaloSrt=new IntervalosSinSubtítulos(archivoSrt,outPutFile);
+        	intervaloSrt.buscarIntervalosSrt();
         }
     }
 }
