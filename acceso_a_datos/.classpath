@@ -8,5 +8,11 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="tests"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/alumno/Downloads/gson-2.10.1.jar">
+		<attributes>
+			<attribute name="module" value="true"/>
+			<attribute name="patch-module" value="com.google.gson=/acceso_a_datos"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
